@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selamat Ulang Tahun!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #ffe4ec;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .countdown {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #d6336c;
+    }
+    .envelope {
+      width: 150px;
+      height: 100px;
+      background: #fff;
+      border: 2px solid #d6336c;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .envelope:hover {
+      transform: scale(1.05);
+    }
+    .letter {
+      display: none;
+      width: 300px;
+      height: 200px;
+      background: white;
+      border: 2px solid #d6336c;
+      padding: 20px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      z-index: 2;
+      animation: slideUp 1s forwards;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translate(-50%, 30%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <div class="countdown" id="countdown"></div>
+
+  <div class="envelope" onclick="openLetter()"></div>
+
+  <div class="letter" id="letter">
+    <h3>Selamat Ulang Tahun Sayang! 🎉</h3>
+    <p>Semoga kamu selalu bahagia, sehat, dan semua impianmu tercapai. Makasih udah jadi orang spesial di hidupku ❤️</p>
+  </div>
+
+  <canvas class="confetti" id="confetti"></canvas>
+
+  <script>
+    // Countdown
+    const countdownEl = document.getElementById("countdown");
+    const targetDate = new Date("April 8, 2025 00:00:00").getTime();
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance <= 0) {
+        clearInterval(interval);
+        countdownEl.innerHTML = "Hari ini ulang tahun kamu! 🎉🎂";
+        return;
+      }
+
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownEl.innerHTML = `Countdown: ${hours}j ${minutes}m ${seconds}d`;
+    }, 1000);
+
+    // Open Letter
+    function openLetter() {
+      document.getElementById("letter").style.display = "block";
+      launchConfetti();
+    }
+
+    // Simple Confetti Effect
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const confettiPieces = [];
+      for (let i = 0; i < 100; i++) {
+        confettiPieces.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * 30 + 10,
+          color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+          tilt: Math.random() * 10 - 10,
+          tiltAngleIncrement: Math.random() * 0.1 + 0.04,
+          tiltAngle: 0
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confettiPieces.forEach((p) => {
+          ctx.beginPath();
+          ctx.lineWidth = p.r / 2;
+          ctx.strokeStyle = p.color;
+          ctx.moveTo(p.x + p.tilt + p.r / 4, p.y);
+          ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r);
+          ctx.stroke();
+        });
+
+        update();
+        requestAnimationFrame(draw);
+      }
+
+      function update() {
+        confettiPieces.forEach((p) => {
+          p.tiltAngle += p.tiltAngleIncrement;
+          p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+          p.x += Math.sin(p.d);
+          p.tilt = Math.sin(p.tiltAngle) * 15;
+        });
+      }
+
+      draw();
+    }
+  </script>
+</body>
+</html>

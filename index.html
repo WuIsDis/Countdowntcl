@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -19,9 +20,10 @@
       position: relative;
     }
     .countdown {
-      font-size: 2rem;
-      margin-bottom: 30px;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
       color: #d6336c;
+      text-align: center;
     }
     .envelope {
       width: 200px;
@@ -32,11 +34,15 @@
       cursor: pointer;
       display: none;
       z-index: 3;
+      transition: transform 1s;
+    }
+    .envelope.opened {
+      transform: rotateX(180deg) scale(1.2);
     }
     .letter {
       display: none;
-      width: 350px;
-      height: auto;
+      width: 90%;
+      max-width: 350px;
       background: white;
       border: 2px solid #d6336c;
       padding: 20px;
@@ -64,12 +70,12 @@
     #clickMeBtn {
       display: none;
       position: absolute;
-      padding: 15px 30px;
+      padding: 12px 20px;
       background-color: #d6336c;
       color: white;
       border: none;
       border-radius: 10px;
-      font-size: 1.2rem;
+      font-size: 1rem;
       cursor: pointer;
       z-index: 4;
     }
@@ -79,10 +85,10 @@
       border: 2px solid #d6336c;
       padding: 20px;
       margin-top: 20px;
-      width: 80%;
+      width: 90%;
       max-width: 500px;
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1rem;
       z-index: 6;
       position: relative;
     }
@@ -97,8 +103,8 @@
     <h3>Selamat Ulang Tahun Sayang! 🎉</h3>
     <div class="message" id="message">
       <p><strong>Happy Sweet Seventeen, sayangg 💖</strong></p>
-      <p>You’re the most precious person in my life, and aku selalu bangga punya dede yang always make my days bright and colourful. Setiap detik bersama dede feels like a blessing, and I promise to selalu ada buat dede, no matter what.</p>
-      <p>Semoga semua cita-cita dede tercapai<br/>Semoga dede panjang umur and sehat selalu, Keep shining, bebyy</p>
+      <p>You’re the most precious person in my life, and i always proud punya ayangg yang always make my days bright and colourful. Every second with dede pretty feels like a blessing, and I promise to selalu ada buat dede, no matter what.</p>
+      <p>Semoga semua cita-cita dede tercapai<br/>Semoga dede panjang umur and sehat selalu. Keep shining, bebyy</p>
       <p><strong>I Lovee Youuu &lt;3<br/>muah :D</strong></p>
     </div>
   </div>
@@ -149,9 +155,12 @@
     }
 
     function openLetter() {
-      letter.style.display = "block";
-      message.style.display = "block";
-      launchConfetti();
+      envelope.classList.add("opened");
+      setTimeout(() => {
+        letter.style.display = "block";
+        message.style.display = "block";
+        launchConfetti();
+      }, 800);
     }
 
     function launchConfetti() {

@@ -16,6 +16,7 @@
       justify-content: center;
       height: 100vh;
       overflow: hidden;
+      position: relative;
     }
     .countdown {
       font-size: 2rem;
@@ -23,21 +24,19 @@
       color: #d6336c;
     }
     .envelope {
-      width: 150px;
-      height: 100px;
+      width: 200px;
+      height: 130px;
       background: #fff;
       border: 2px solid #d6336c;
       position: relative;
       cursor: pointer;
-      transition: transform 0.3s;
-    }
-    .envelope:hover {
-      transform: scale(1.05);
+      display: none;
+      z-index: 3;
     }
     .letter {
       display: none;
-      width: 300px;
-      height: 200px;
+      width: 350px;
+      height: auto;
       background: white;
       border: 2px solid #d6336c;
       padding: 20px;
@@ -60,27 +59,60 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 3;
+      z-index: 5;
+    }
+    #clickMeBtn {
+      display: none;
+      position: absolute;
+      padding: 15px 30px;
+      background-color: #d6336c;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 4;
+    }
+    .message {
+      display: none;
+      background: white;
+      border: 2px solid #d6336c;
+      padding: 20px;
+      margin-top: 20px;
+      width: 80%;
+      max-width: 500px;
+      text-align: center;
+      font-size: 1.1rem;
+      z-index: 6;
+      position: relative;
     }
   </style>
 </head>
 <body>
   <div class="countdown" id="countdown"></div>
 
-  <div class="envelope" onclick="openLetter()"></div>
-
+  <button id="clickMeBtn" onclick="moveButton()">Click Me!</button>
+  <div class="envelope" id="envelope" onclick="openLetter()"></div>
   <div class="letter" id="letter">
     <h3>Selamat Ulang Tahun Sayang! 🎉</h3>
-    <p>Semoga kamu selalu bahagia, sehat, dan semua impianmu tercapai. Makasih udah jadi orang spesial di hidupku ❤️</p>
+    <div class="message" id="message">
+      <p><strong>Happy Sweet Seventeen, sayangg 💖</strong></p>
+      <p>You’re the most precious person in my life, and aku selalu bangga punya dede yang always make my days bright and colourful. Setiap detik bersama dede feels like a blessing, and I promise to selalu ada buat dede, no matter what.</p>
+      <p>Semoga semua cita-cita dede tercapai<br/>Semoga dede panjang umur and sehat selalu, Keep shining, bebyy</p>
+      <p><strong>I Lovee Youuu &lt;3<br/>muah :D</strong></p>
+    </div>
   </div>
-
   <canvas class="confetti" id="confetti"></canvas>
 
   <script>
-    // Countdown
     const countdownEl = document.getElementById("countdown");
-    const targetDate = new Date("April 8, 2025 00:00:00").getTime();
+    const clickBtn = document.getElementById("clickMeBtn");
+    const envelope = document.getElementById("envelope");
+    const letter = document.getElementById("letter");
+    const message = document.getElementById("message");
+    let clickCount = 0;
 
+    const targetDate = new Date("April 8, 2025 00:00:00").getTime();
     const interval = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate - now;
@@ -88,6 +120,10 @@
       if (distance <= 0) {
         clearInterval(interval);
         countdownEl.innerHTML = "Hari ini ulang tahun kamu! 🎉🎂";
+        clickBtn.style.display = "block";
+        clickBtn.style.top = "50%";
+        clickBtn.style.left = "50%";
+        clickBtn.style.transform = "translate(-50%, -50%)";
         return;
       }
 
@@ -98,13 +134,26 @@
       countdownEl.innerHTML = `Countdown: ${hours}j ${minutes}m ${seconds}d`;
     }, 1000);
 
-    // Open Letter
+    function moveButton() {
+      clickCount++;
+      if (clickCount === 1) {
+        clickBtn.style.top = "20%";
+        clickBtn.style.left = "30%";
+      } else if (clickCount === 2) {
+        clickBtn.style.top = "70%";
+        clickBtn.style.left = "70%";
+      } else if (clickCount === 3) {
+        clickBtn.style.display = "none";
+        envelope.style.display = "block";
+      }
+    }
+
     function openLetter() {
-      document.getElementById("letter").style.display = "block";
+      letter.style.display = "block";
+      message.style.display = "block";
       launchConfetti();
     }
 
-    // Simple Confetti Effect
     function launchConfetti() {
       const canvas = document.getElementById('confetti');
       const ctx = canvas.getContext('2d');
@@ -135,7 +184,6 @@
           ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r);
           ctx.stroke();
         });
-
         update();
         requestAnimationFrame(draw);
       }
